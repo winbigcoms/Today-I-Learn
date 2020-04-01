@@ -184,7 +184,11 @@
    inherit : 부모 요소의 속성값을 상속받습니다.
    ```
 
-   5.  text-shadow를 이용한 text-border 효과
+   
+
+   
+
+   5.text-shadow를 이용한 text-border 효과
 
    ```
      text-shadow: 1px 0 0 #000, 0 1px 0 #000, -1px 0 0 #000, 0 -1px 0 #000;
@@ -192,5 +196,24 @@
 
    
 
-   
+   6.li의 정렬
+
+   		1. display: flex
+   		2. 구형 브라우저 : display: inline(inline-block) > 디자인 자체는 똑같지만 추		후 높이 padding등의 디자인을 위해서 inline-block사용
+   7. 리스트의 구분선의 디자인
+
+      ```
+      1. a ㅣ b ㅣ c 의 ㅣ를 가상선택자 after,before로 처리할 경우( 접근성 낮은 경우)
+      	li:not(:last-child)::after, li:not(:first- child)::before{
+      	content:"ㅣ";
+      	display:inline-block;
+      	margin: 0 x;
+      	}
+      
+      2. 위의 경우 구분자를 스크린 리더기가 읽어서 불편함 초래 그러므로 
+      	<span aria-hidden="true">ㅣ</span> 로 처리
+      	의미없는 디자인적 요소 + aria-hidden에 의해 읽히지 않음
+      ```
+
+      
 
