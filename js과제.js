@@ -123,14 +123,35 @@ for (var x = 0; x < 5; x++) {
 // 15번
 var space15 = "     ";
 var star15 = "*";
-for (var x = 1; x < 10; x++) {
-  for (var z = 1; z < 10; z++) {
-    if ((x === z) && (x % 2)) {
-      space15 = space15.substring(1, space15.length);
-      space15 = space15.concat(star15);
-      space15 = space15.concat(star15);
-      space15 = space15.concat(star15);
-      console.log(space15);
+var star15d = "**";
+for (var x = 0; x < 5; x++) {
+  for (var z = 0; z < 5; z++) {
+    if (x === z) {
+      if(x === 1){
+        space15 = space15.substring(1, space15.length);
+        space15 = space15.concat(star15);
+        console.log(space15);
+      }else if(x >1){
+        space15 = space15.substring(1, space15.length);
+        space15 = space15.concat(star15d);
+        console.log(space15);
+      }
+    }
+  }
+}
+
+//16번
+var star16 = "*********";
+for(var p = 0; p < 5; p++){
+  for(var l = 0; l <5; l++){
+    if(p === l){
+      if(l == 0){
+        console.log(star16);
+      }else if(l > 0){
+        star16 = star16.substring(0, star16.length-1);
+        star16 = star16.replace("*"," ");
+        console.log(star16)
+      }
     }
   }
 }
