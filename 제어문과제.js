@@ -102,8 +102,10 @@ for (var x = 6; x > 0; x--) {
 var star13 = "******";
 for (var x = 5; x > 0; x--) {
   for (var z = 5; z > 0; z--) {
+    if (x === z) {
     star13 = star13.substring(0, star13.length - 1);
     console.log(star13 + "\n");
+    }
   }
 }
 
