@@ -77,8 +77,8 @@ function removeTodo(id) {
 }
 
 removeTodo(2);
-
 console.log(todos);
+
 // 6번문제
 let todos = [
   { id: 3, content: 'HTML', completed: false },
@@ -87,11 +87,11 @@ let todos = [
 ];
 
 function toggleCompletedById(id) {
-  todos.forEach((todo, idx) => {
-    if (todo.id === id) {
-      todos[idx] = { ...todo, ...{ completed: !todo.completed } };
-    }
-  });
+  
+    // if (todo.id === id) {
+    //   todos[idx] = { ...todo, ...{ completed: !todo.completed } };
+    // }
+  todos = todos.map( todo => todo.id === id ? {...todo, completed: !todo.completed}:todo );
 }
 
 toggleCompletedById(2);
@@ -106,11 +106,14 @@ let todos = [
 ];
 
 function toggleCompletedAll() {
-  todos.map((todo, idx, arr) => {
-    arr[idx] = { ...todo, ...{ completed: true } };
-  });
+  // todos.map((todo, idx, arr) => {
+  //   arr[idx] = { ...todo, ...{ completed: true } };
+  // });
+  todos = todos.map( todo => ({...todo, ...{completed : true}}))
+  // todos.forEach( (todo, idx, arr) => {
+  //   arr[idx] = {...todo, completed : true};
+  // })
 }
-
 toggleCompletedAll();
 
 console.log(todos);
@@ -122,7 +125,7 @@ let todos = [
 ];
 
 function countCompletedTodos() {
-  const resArr = todos.filter(todo => todo.completed === true);
+  const resArr = todos.filter(todo => todo.completed);
   return resArr.length;
 }
 
