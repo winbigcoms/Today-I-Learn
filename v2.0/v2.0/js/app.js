@@ -31,8 +31,7 @@ const render = () => {
     </li>`;
     comNum = todo.complete ? comNum + 1 : comNum;
   });
-  // $comALL.checked = todos.every( todo => todo.complete);
-(  comNum===todos.length ? $comALL.checked = true : $comALL.checked = false);
+  $comALL.checked = todos.every( todo => todo.complete) && todos.length > 0;
   console.log(comNum);
   $nowComp.innerHTML = comNum;
   $restTd.innerHTML = todos.length - comNum;
