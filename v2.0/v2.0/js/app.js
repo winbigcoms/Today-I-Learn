@@ -3,7 +3,6 @@ let todos = [
   {id: 1, content: "html", complete : false}
 ];
 
-
 const $input = document.querySelector(".input-todo");
 const $ul = document.querySelector('.todos');
 const $comAll = document.querySelector(".complete-all");
@@ -11,7 +10,7 @@ const $delBtn = document.querySelector(".btn");
 const $nowComp = document.querySelector(".completed-todos");
 const $restTd = document.querySelector(".active-todos");
 const $delOne = document.querySelector(".remove-todo");
-
+const $comALL = document.getElementById("ck-complete-all");
 // 아이디생성기
 const idGenerator = () => {
   let idArr = todos.map( todo => todo.id);
@@ -32,6 +31,9 @@ const render = () => {
     </li>`;
     comNum = todo.complete ? comNum + 1 : comNum;
   });
+  // $comALL.checked = todos.every( todo => todo.complete);
+(  comNum===todos.length ? $comALL.checked = true : $comALL.checked = false);
+  console.log(comNum);
   $nowComp.innerHTML = comNum;
   $restTd.innerHTML = todos.length - comNum;
   $ul.innerHTML = html;
