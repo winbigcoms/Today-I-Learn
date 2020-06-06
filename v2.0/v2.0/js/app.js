@@ -1,6 +1,6 @@
 // State
 let todos = [
-  {id: 1, content: "html", complete : false}
+
 ];
 
 const $input = document.querySelector(".input-todo");
@@ -11,6 +11,7 @@ const $nowComp = document.querySelector(".completed-todos");
 const $restTd = document.querySelector(".active-todos");
 const $delOne = document.querySelector(".remove-todo");
 const $comALL = document.getElementById("ck-complete-all");
+
 // 아이디생성기
 const idGenerator = () => {
   let idArr = todos.map( todo => todo.id);
@@ -22,17 +23,16 @@ const render = () => {
   html = "";
   let comNum = 0;
   todos.sort( (a, b) => b.id - a.id);
-  todos.forEach( todo => {
+  todos.forEach( ({id, content, complete}) => {
     html+= 
-    `<li id="${todo.id}" class="todo-item">
-      <input id="ck-${todo.id}" class="checkbox" type="checkbox" ${ todo.complete ? "checked" : ""}>
-      <label for="ck-${todo.id}">${todo.content}</label>
+    `<li id="${id}" class="todo-item">
+      <input id="ck-${id}" class="checkbox" type="checkbox" ${ complete ? "checked" : ""}>
+      <label for="ck-${id}">${content}</label>
       <i class="remove-todo far fa-times-circle"></i>
     </li>`;
-    comNum = todo.complete ? comNum + 1 : comNum;
+    comNum = complete ? comNum + 1 : comNum;
   });
   $comALL.checked = todos.every( todo => todo.complete) && todos.length > 0;
-  console.log(comNum);
   $nowComp.innerHTML = comNum;
   $restTd.innerHTML = todos.length - comNum;
   $ul.innerHTML = html;
@@ -40,6 +40,7 @@ const render = () => {
 
 // 시작시 렌더링
 window.onload = render;
+
 // 추가하기
 $input.onkeyup = e => {
   if ( e.keyCode !== 13 || $input.value.trim() === "") return;
@@ -76,7 +77,6 @@ $delBtn.onclick = () => {
 // 개별삭제
 $ul.onclick = e => {
   if( !e.target.matches("li > i")) return;
-  console.log(e.target.parentNode.id);
   todos = todos.filter( todo => todo.id !== +e.target.parentNode.id);
   render();
 }
