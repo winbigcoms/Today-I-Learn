@@ -28,8 +28,8 @@ const render = () =>{
       <input id="ck-${id}" class="checkbox" type="checkbox" ${completed ? "checked" : ""}>
       <label for="ck-${id}">${content}</label>
       <i class="remove-todo far fa-times-circle"></i>
-      </li>`
-    })     
+    </li>`
+  });
   $todos.innerHTML = html;
   $checkAll.checked = todos.every( todo => todo.completed) && todos.length !== 0;
   $completedTodos.textContent = countCom;
@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded",render);
 
 // 네비 토글
 const toggleBtn = ({target}) => {
-  if( !target.matches(".nav > li") ) return;
+  if( !target.matches(".nav > li:not(.active)") ) return;
   [...$ul.children].forEach( $navItem => $navItem.classList.toggle("active",$navItem === target));
 }
 // 캡쳐링으로 잡아서 목록보기 이벤트 보다 빨리
