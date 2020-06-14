@@ -1,30 +1,26 @@
-export const ajax = (() => {
-  const req = (method, url, callback, payload) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, url);
-    xhr.setRequestHeader('content-type', 'application/json');
-    xhr.send(JSON.stringify(payload));
-    xhr.onload = () => {
-      if (xhr.status === 200 || xhr.status === 201) {
-        callback(JSON.parse(xhr.response));
-      } else {
-        console.error(xhr.status);
-      }
-    };
-  };
-
+export const request = (() => {
   return {
-    get(url, callback) {
-      req('GET', url, callback);
+    get(url) {
+      return fetch(url);
     },
-    post(url, payload, callback) {
-      req('POST', url, callback, payload);
+    post(url, payload) {
+      return fetch(url, {
+        method : 'POST',
+        headers: {'content-Type':'application/json'},
+        body: JSON.stringify(payload)          
+      });
     },
-    patch(url, payload, callback) {
-      req('PATCH', url, callback, payload);
+    patch(url, payload) {
+      return fetch(url,{
+        method:'PATCH',
+        headers: {'content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
     },
-    delete(url, callback) {
-      req('DELETE', url, callback);
+    delete(url) {
+      return fetch(url,{
+        method: 'DELETE'
+      });
     }
   };
 })();

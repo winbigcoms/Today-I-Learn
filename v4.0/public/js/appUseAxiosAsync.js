@@ -1,5 +1,3 @@
-import { ajax } from './ajax.js';
-
 let todos = [];
 const $todos = document.querySelector('.todos');
 const $input = document.querySelector(".input-todo");
@@ -28,56 +26,76 @@ const render = () => {
   $ckCompleteAll.checked = todos.every( todo => todo.completed) && todos.length !== 0;
   $todos.innerHTML = html;
 };
-
+const getTodos = async () => {
+  try{  let response = await axios.get("/todos");
+    todos = response.data;
+    render()
+  }catch {
+    console.error(err);
+  }
+}
 window.onload = () => {
-  ajax.get("/todos", gettedTodos =>{
-    todos = gettedTodos;
-    console.log(todos);
-    render();
-  })
-}
+  getTodos();
+};
+let asda = 0
 const idGenerator = () => {
-    return todos.length? Math.max(...todos.map(({id})=>id)) + 1 : 1;
+  let makedId = todos.length ? Math.max(...todos.map(({id})=> id)) + 1 : 1
+  console.log(makedId);
+  return makedId
 }
-$input.onkeyup = (e) => {
+$input.onkeyup = async (e) => {
   if(e.keyCode !== 13 || $input.value.trim() === "") return
-  ajax.post("/todos", {id: idGenerator(),content: $input.value.trim(), completed:false}, (gettedTodos)=> {
-    todos = gettedTodos;
-    render();
-  })
-  $input.value=""
+  try {  let response = await axios.post("/todos",{id: idGenerator(),content: $input.value.trim(), completed:false})
+    todos = response.data;
+    render()
+    $input.value=""
+  } catch {
+    console.error(err);
+  }
 };
 
-$todos.onclick = e => {
+$todos.onclick = async e => {
   if( !e.target.matches(".todos .todo-item i"))return;
-  ajax.delete(`/todos/${+e.target.parentNode.id}`, gettedTodos=> {
-    todos = gettedTodos;
-    render();
-  })
+
+  try{  let response = await axios.delete(`/todos/${+e.target.parentNode.id}`);
+    todos = response.data;
+    render()
+  }catch{
+    console.error(err);
+  }
 }
 
-$ckCompleteAll.onchange = e => {
-  ajax.patch("/todos", {completed : $ckCompleteAll.checked}, gettedTodos => {
-    todos = gettedTodos;
-    render();
-  });
+$ckCompleteAll.onchange = async e => {
+  try{
+    let response = await axios.patch("/todos", {completed : $ckCompleteAll.checked});
+    todos = response.data;
+    render()
+  }catch{
+    console.error(err);
+  }
 }
-$todos.addEventListener("click", e=> {
+$todos.onchange = async e=> {
   if( !e.target.matches("li > input")) return;
-  ajax.patch(`/todos/${e.target.parentNode.id}`,{completed: e.target.checked}, gettedTodos => {
-    todos = gettedTodos;
-    render();
-  })
-})
+    try{
+      let response = await axios.patch(`/todos/${e.target.parentNode.id}`,{completed: e.target.checked});
+      todos = response.data;
+      render();
+    }catch{
+      console.error(err)
+    }
+}
 
-$delAllBtn.onclick = e => {
-  ajax.delete("/todos/completed", gettedTodos => {
-    todos = gettedTodos;
+$delAllBtn.onclick = async () => {
+  try{
+    let response = await axios.delete("/todos/completed");
+    todos = response.data;
     render();
-    console.log(todos);
-  })
+  }catch{
+    console.error(err)
+  }
 }
 const $ul = document.querySelector('.nav');
+
 $ul.onclick = e => {
   if(!e.target.matches("ul > li")) return;
   [...$ul.children].forEach( li => {

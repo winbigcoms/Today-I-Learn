@@ -65,10 +65,10 @@ app.patch('/todos/:id', (req, res) => {
 // PATCH : 리스소의 일부를 UPDATE
 // 전체 일괄 갱신
 app.patch('/todos', (req, res) => {
-  const { completed } = req.body;
+  const { completed:completed } = req.body;
   console.log('[PATCH] req.body => ', completed);
 
-  todos = todos.map(todo => ({ ...todo, completed }));
+  todos = todos.map(todo => ({ ...todo, completed:completed }));
   res.send(todos);
 });
 

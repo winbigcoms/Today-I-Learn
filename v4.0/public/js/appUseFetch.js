@@ -1,4 +1,4 @@
-import { ajax } from './ajax.js';
+import { request } from './fetch.js';
 
 let todos = [];
 const $todos = document.querySelector('.todos');
@@ -30,52 +30,66 @@ const render = () => {
 };
 
 window.onload = () => {
-  ajax.get("/todos", gettedTodos =>{
-    todos = gettedTodos;
-    console.log(todos);
-    render();
-  })
+  // request.get("/todos", gettedTodos =>{
+  //   todos = gettedTodos;
+  //   console.log(todos);
+  //   render();
+  // })
+  request.get("/todos")
+    .then(gettedRes => gettedRes.json())
+    .then(gettedTodos => todos = gettedTodos)
+    .then(render)
+    .catch( err => console.error(err));
 }
 const idGenerator = () => {
     return todos.length? Math.max(...todos.map(({id})=>id)) + 1 : 1;
 }
 $input.onkeyup = (e) => {
   if(e.keyCode !== 13 || $input.value.trim() === "") return
-  ajax.post("/todos", {id: idGenerator(),content: $input.value.trim(), completed:false}, (gettedTodos)=> {
-    todos = gettedTodos;
-    render();
-  })
+  // ajax.post("/todos", {id: idGenerator(),content: $input.value.trim(), completed:false}, (gettedTodos)=> {
+  //   todos = gettedTodos;
+  //   render();
+  // })
+  request.post("/todos",{id: idGenerator(),content: $input.value.trim(), completed:false})
+    .then(gettedRes => gettedRes.json())
+    .then(gettedTodos => todos = gettedTodos)
+    .then(render)
+    .catch( err => console.err(err));
   $input.value=""
 };
 
 $todos.onclick = e => {
   if( !e.target.matches(".todos .todo-item i"))return;
-  ajax.delete(`/todos/${+e.target.parentNode.id}`, gettedTodos=> {
-    todos = gettedTodos;
-    render();
-  })
+  request.delete(`/todos/${+e.target.parentNode.id}`)
+    .then(gettedRes => gettedRes.json())
+    .then(gettedTodos => todos = gettedTodos)
+    .then(render)
+    .catch(err => console.error(err))
 }
 
-$ckCompleteAll.onchange = e => {
-  ajax.patch("/todos", {completed : $ckCompleteAll.checked}, gettedTodos => {
-    todos = gettedTodos;
-    render();
-  });
+$ckCompleteAll.onchange = () => {
+  request.patch("/todos",{completed : $ckCompleteAll.checked})
+    .then(gettedRes => gettedRes.json())
+    .then(gettedTodos => todos = gettedTodos)
+    .then(render)
+    .catch( err=> console.error(err))
 }
+
 $todos.addEventListener("click", e=> {
   if( !e.target.matches("li > input")) return;
-  ajax.patch(`/todos/${e.target.parentNode.id}`,{completed: e.target.checked}, gettedTodos => {
-    todos = gettedTodos;
-    render();
-  })
+  request.patch(`/todos/${e.target.parentNode.id}`,{completed: e.target.checked})
+    .then(gettedRes => gettedRes.json())
+    .then(gettedTodos => todos = gettedTodos)
+    .then(render)
+    .catch(err => console.error(err))
 })
 
 $delAllBtn.onclick = e => {
-  ajax.delete("/todos/completed", gettedTodos => {
-    todos = gettedTodos;
-    render();
-    console.log(todos);
-  })
+  request.delete("/todos/completed")
+    .then(gettedRes => gettedRes.json())
+    .then(gettedTodos => todos = gettedTodos)
+    .then(render)
+    .catch(err=> console.error(err))
 }
 const $ul = document.querySelector('.nav');
 $ul.onclick = e => {
