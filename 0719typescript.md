@@ -191,3 +191,7 @@ npx create-react-app ts-react-tuto --typescript -> 타입스크립트 적용 상
 react에서의 typescript 파일 확장자는 .tsx
 ```
 
+# 타입스크립트 사용하기
+확장자는 ts로 자바스크립트 쓰듯이 사용한 후
+tsc 파일명 --target js버전
+이라는 명령어를 이용해서 컴파일한다.
