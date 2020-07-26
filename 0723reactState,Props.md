@@ -373,8 +373,45 @@ function About({histroy}) {
 }
 ```
 
+### withRouter
+
 withRouter() 를 이용해서 props를 전달해준다.. 이런 것을 HOC라고한다.
+
+HOC는 컴포넌트를 인자로 받아서 새로운 컴포넌트를 리턴하는 함수이다.
+
+```jsx
+기존이라면 부모 컴포넌트에서 하위 컴포넌트로 props를 넘겨주어야 하지만 하위 컴포넌트가 어느
+위치에 있든 조상이 가지고 있는 props를 사용할 수 있다.
+/login
+import {widthRouter} form "react-router-dom"
+
+	export defualt function Login({history}) {
+		<LoginBtn/>
+	}
+
+/LonginBtn
+	function LoginBtn({history}) {
+		return (
+			<div><button onClick = {click}>로그인</button></div>
+		)
+		function click(){
+			setTimeout(()=>{
+				history.push("/");	
+			},1000)
+		}
+	}
+export default widthRouter(LoginBtn);  ->login 컴포넌트에서 Btn컴포넌트로 props를
+주지 않았지만 widthRouter라는 react-router-dom의 함수를 이용하면 부모의 props를 사용할 수
+있다.
+```
 
 ## redirect
 
-특정 조건에서 화면을 랜더링 해야 할 때 사용한다.
+특정 조건에서 화면을 랜더링 해야 할 때 사용한다. ex) 로그인이 필요한 페이지
+
+```jsx
+/About 
+isLogin ? <Redirect to="/"/> : <Login/>
+-> 로그인을 체크하는 상태를 확인하여 로그인되어 있으면 메인 페이지로 이동, 비로그인 상태라면
+로그인 페이지로 이동
+```
