@@ -179,4 +179,4 @@ hexo deploy
 
 한번에 하기
 
-hexo clean && hexo generate && hexo deploy
+hexo clean && hexo generate && hexo deploygit 

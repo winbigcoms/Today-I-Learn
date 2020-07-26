@@ -163,6 +163,17 @@ settingNumberFunction( number => number + 1);
 
 함수 호출의 결과로 useState의 최초 상태값이 변경된다.
 
+```
+일반적인 사용
+const [inputs,setInputs] = useState({name:"",age:""});
+
+// inputs = {name:"", age:""}
+// setInputs는 inputs를 업데이트하는 함수
+setInputs(a=>{}) 처럼 함수로 사용할 수 있고 그냥
+setInputs({...inputs,name:value}) 이런 식으로 사용할 수 있다.
+ 인수로 매개변수를 줄 때에 매개변수의 첫 인수로는 현재 상태inputs가 들어간다.
+```
+
 
 
 

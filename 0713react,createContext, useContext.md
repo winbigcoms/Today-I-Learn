@@ -28,3 +28,22 @@ const dispatch = useContext(UserDispatch)
 ```
 
 이렇게 하위 컴포넌트에서 바로 사용이 가능하다.
+
+
+
+<hr>
+
+헷깔려서 다시 
+
+```
+const myContext = createContext('defaultValue') // context기본값 설정
+
+const text = useContext(myContext) ; //context기본값 사용법
+
+<myContext.provider value="fixedText"> // 변경된 값을 사용
+	<parent>
+</myContext.provider>
+```
+
+
+
