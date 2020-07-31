@@ -411,6 +411,7 @@ export default widthRouter(LoginBtn);  ->login 컴포넌트에서 Btn컴포넌�
 
 ```jsx
 /About 
+import {Redirect} from "react-router-dom"
 isLogin ? <Redirect to="/"/> : <Login/>
 -> 로그인을 체크하는 상태를 확인하여 로그인되어 있으면 메인 페이지로 이동, 비로그인 상태라면
 로그인 페이지로 이동
