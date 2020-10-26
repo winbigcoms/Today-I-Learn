@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body{
+      overflow: hidden;
+    }
+    #canvas{
+      width: 100vw;
+      height: 100vh;
+    }
+    body{
+      padding: 0;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    // window.addEventListener();
+    ctx.beginPath();
+    ctx.arc(50,50,20,0,Math.PI*2);
+    ctx.strok();
+  </script>
+</body>
+</html>
