@@ -33,16 +33,22 @@ function foker(cards){
   // 스트레이트 계산 함수
   const stright = nums => {
     // 숫자를 낮은 수 부터 정렬
-    let result = false;
-    nums.sort((a,b)=>a-b);
-
-    for(let idx= 0; idx<nums.length;idx++){
-      if(!(nums[idx]+1 === nums[idx+1])){
-        return result
-      }else{
-        result = true;
+    let result = {
+      result: true,
+      num:0
+    };
+  //  계산을 위한 정렬
+    const sortNums = nums.sort((a,b)=>a-b);
+// 확인
+    for(let idx= 0; idx < sortNums.length-1; idx++){
+      if(!(sortNums[idx]+1 === sortNums[idx+1])){
+        result = false;
+        break
       }
     }
+    result.num = sortNums[sortNums.length -1];
+    // 세부점수 초기화
+    resultFeatPoint = result.num?result.num/100:0;
     return result
   }
 
@@ -85,7 +91,8 @@ function foker(cards){
       }
     }
     result = true;
-    resultFeatPoint = feat.indexOf(cardFeat)/100;
+    // 세부 점수
+    resultFeatPoint = feat.indexOf(cardFeat)/1000;
     return result;
   };
   // 스트레이트 플러쉬
@@ -94,9 +101,10 @@ function foker(cards){
     const cardFeat = flush(featArray);
     const cardNums = stright(numArray);
 
-    if(cardFeat && cardNums) {
+    if(cardFeat && cardNums.result) {
       result = true;
-      resultFeatPoint = feat.indexOf(cardFeat)/100;
+      // 세부 점수
+      resultFeatPoint = feat.indexOf(cardFeat)/1000 + cardNums.num/100;
       return result
     }else{
       // 다른 무늬가 있으면 바로 끝
@@ -113,6 +121,7 @@ function foker(cards){
     for(let i=0; i<innerNum.length; i++){
       if(nums[innerNum[i]]===4){
         result=true;
+        resultFeatPoint = innerNum[i]/100
       }
     }
     return result;
@@ -120,34 +129,55 @@ function foker(cards){
   // 풀하우스
   const FH = numArray=>{
     let result = false;
-    let three=false;
-    let two = false;
-    const {nums,innerNum} = setNums(numArray);
-    for(let i=0; i<innerNum.length; i++){
-      if(nums[innerNum[i]]===3){
-        three=true;
-        continue;
-      }else if(nums[innerNum[i]]===2){
-        two = true;
-        continue;
-      }
-    }
-    if(three&&two){
+    let three=TH(numArray);
+    let two = TW(numArray);
+    // 트리플과 투페어
+    if(three.result&&two.result){
       result = true;
-      return result;
+      resultFeatPoint = three.num/100 + two.num/100000
     }
     return result
   }
+  // 트리플
   const TH = numArray=>{
     const {nums,innerNum} = setNums(numArray);
-    let three=false;
+    let three={
+      result : false,
+      num:0
+    };
     for(let i=0; i<innerNum.length; i++){
       if(nums[innerNum[i]]===3){
-        three=true;
+        three.result=true;
+        three.num=innerNum[i];
+        resultFeatPoint = three.num / 100;
         return three
       }
     }
     return three
+  }
+  // 투페어
+  const TW = numArray =>{
+    const {nums,innerNum} = setNums(numArray);    
+    // 2페어가 2개 나오면 큰 수 반환하기 위해서
+    const twoArr = [];
+    const two = {
+      result:false,
+      num:0
+    };
+    for(let i=0; i<innerNum.length; i++){
+      if(nums[innerNum[i]]===2){
+        twoArr.push(innerNum[i]);
+        two.result = true;
+      }
+    }
+    if(twoArr.length === 0) return two.result;
+    if(twoArr.length > 1){
+      two.num = twoArr[0]>twoArr[1]?twoArr[0]:twoArr[1];
+    }else{
+      two.num = twoArr[0]
+    }
+    resultFeatPoint = two.num / 10000;
+    return two
   }
 
   // 손패 계산
@@ -161,8 +191,12 @@ function foker(cards){
     result = "풀하우스"
   }else if(flush(myFeat)){
     result = "플러쉬"
-  }else if(stright(myNumsAfterFliter)){
+  }else if(stright(myNumsAfterFliter).result){
     result = "스트레이트"
+  }else if(TH(myNumsAfterFliter).result){
+    result = "트리플";
+  }else if(TW(myNumsAfterFliter).result){
+    result = "투페어";
   }
   resultPoint = jokbo.indexOf(result);
   const finalPoint = resultPoint+resultFeatPoint;
@@ -174,7 +208,19 @@ const a = ["TS","TC","TH","5D","5H"];
 const b = ["TS","9C","8H","7D","6H"];
 const c = ["TS","9S","8S","7S","6S"];
 const d = ["TS","AS","JS","QS","KS"];
-foker(a);
-foker(b);
-foker(c);
-foker(d);
+const e = ["TS","TC","TH","4D","5H"];
+const f = ["TS","TC","3H","5D","5H"];
+const g = ["TS","TC","TH","TD","5H"];
+
+const winRate = {
+  A:0,
+  B:0,
+  um:0
+}
+const fight = (a,b)=>{
+  const playerA = foker(a);
+  const playerB = foker(b);
+  return playerA > playerB ? winRate.A++ : playerA < playerB ? winRate.B++ : winRate.um++;
+}
+fight(a,b);
+console.log(winRate);
