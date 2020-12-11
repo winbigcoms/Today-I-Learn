@@ -72,6 +72,11 @@ function foker(cards){
       nums,
       innerNum
     }
+    // 결과 예시 2,3,2,4,9
+    // {
+    //  [2,3,4,9],
+    //  {2:2,3:1,4:1,9:1}
+    // }
     return result
   }
 
@@ -179,7 +184,22 @@ function foker(cards){
     resultFeatPoint = two.num / 10000;
     return two
   }
-
+  // 탑 계산
+  const TOP = (numArray)=>{
+    const {nums,innerNum} = setNums(numArray);
+    const top = {
+      result:true,
+      num:0
+    }
+    // 이미 겹치는 숫자가 없는 상태
+    const higherNum = innerNum.reduce((acc,cur)=>{
+      if(acc > cur)return acc;
+      if(acc <= cur)return cur;
+    });
+    top.num = higherNum;
+    resultFeatPoint = top.num / 10000;
+    return top;
+  }
   // 손패 계산
   if(LSF(myNumsAfterFliter,myFeat)){
     result = "로얄 스트레이트 플러쉬";
@@ -197,6 +217,8 @@ function foker(cards){
     result = "트리플";
   }else if(TW(myNumsAfterFliter).result){
     result = "투페어";
+  }else if(TOP(myNumsAfterFliter).result){
+    result = "탑";
   }
   resultPoint = jokbo.indexOf(result);
   const finalPoint = resultPoint+resultFeatPoint;
@@ -211,7 +233,8 @@ const d = ["TS","AS","JS","QS","KS"];
 const e = ["TS","TC","TH","4D","5H"];
 const f = ["TS","TC","3H","5D","5H"];
 const g = ["TS","TC","TH","TD","5H"];
-
+const h = ["TS","9C","3H","2D","5H"];
+const i = ["8S","9C","3H","2D","5H"];
 const winRate = {
   A:0,
   B:0,
@@ -222,5 +245,5 @@ const fight = (a,b)=>{
   const playerB = foker(b);
   return playerA > playerB ? winRate.A++ : playerA < playerB ? winRate.B++ : winRate.um++;
 }
-fight(a,b);
+fight(i,h);
 console.log(winRate);
