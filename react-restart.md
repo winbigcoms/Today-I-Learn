@@ -1,6 +1,161 @@
 # React만들어 보기
 
-1. 라이프 사이클
+0. 기초 지식
+   react는 jsx문법을 babel을 이용하여 js로 변환시킨 후 사용한다.
+
+   ```jsx
+   const Header = <header title="isHeader">hihi</header>;
+   ```
+
+   ->
+
+   ```js
+   const Header = React.createElement(
+     "header", // 태그명
+     {
+       title: "isHeader", // 프로퍼티
+     },
+     "hihi" // children
+   );
+   ```
+
+   jsx는 이렇게 자신의 정보를 같는 js코드로 변환된다. 그리고 ReactDOM.render함수를 이용하여 랜더링한다.
+
+   ```js
+   const header = {
+     type: "header",
+     props: {
+       title: "isHeader",
+       chlidren: "hihi",
+     },
+   }; // createElement에 의해 변환된 값
+
+   const container = document.getElementById("root");
+   ReactDOM.render(header, container);
+   ```
+
+   이제 ReactDOM.render 함수를 살펴보자. 이 부분은 react가 DOM을 직접 변경하는 부분이다.
+
+   ```js
+   ReactDOM.render(element, container);
+
+   const createdNODE = document.createElement(element.type);
+
+   for (let property in element.props) {
+     if (property === "children") {
+       continue;
+     }
+     createdNODE[property] = element.props[property];
+   }
+   const textNode = document.createdTextNode("");
+   textNode["nodeValue"] = element.props.children;
+
+   createdNODE.appendChild(textNode);
+
+   container.appendChild(createdNODE);
+   ```
+
+   간단하게 보면 이렇게 동작 한다고 볼 수 있겠다.
+
+1. React.createElement
+   children이 textNode 하나인 경우를 살펴 보았다. 그러면 태그안에 태그안에 태그...인 jsx는 어떨까
+
+   ```jsx
+   const Header = (
+     <header id="mainHeader">
+       <a>logo</a>
+       <nav>navigation</nav>
+       hi
+     </header>
+   );
+   ```
+
+   보통 헤더를 만들면 이런 식으로 여러 태그가 중첩된다. 이 코드를 babel로 변환시켜 보면 다음과 같다.
+
+   ```js
+   const Header = React.createElement(
+     "header",
+     { id: "mainHeader" },
+     React.createElement("a", null, "logo"),
+     React.createElement("nav", null, "navigation"),
+     "hi"
+   );
+   ```
+
+   가만히 보니 jsx문법에서 children으로 들어오는 요소들은 몇 개가 될지 모른다. 때문에 React.createElement의 첫, 두번째 요소까지는 확정인데 세번째 children이 되는 요소는 얼마나 될지 모르니
+   spread문법으로 받아준다.
+
+   ```js
+   function createElement(type, property, ...children) {
+     return {
+       type,
+       props: {
+         ...property,
+         children: children.map((child) =>
+           typeof child === "object" ? child : createTextNode(child)
+         ),
+       },
+     };
+   }
+
+   function createTextNode(text) {
+     return {
+       type: "TEXT_ELEMENT",
+       props: {
+         nodeValue: text,
+         children: [],
+       },
+     };
+   }
+   ```
+
+2. render함수
+   위의 정리를 토대로 랜더함수를 정리해보면 다음과 같다.
+
+   ```jsx
+   const Header = (
+     <header id="mainHeader">
+       <a>logo</a>
+       <nav>navigation</nav>
+       hi
+     </header>
+   );
+
+   const container = document.getElementById("root");
+   ReactDOM.render(Header, container);
+   ```
+
+   ```js
+   function render(element, container) {
+      const dom = element.type === 'TEXT_ELEMENT'? document.createTextNode('') : document.createElement(element.type);
+
+      Object.keys(element.props).filter(key=>(key !== 'children').forEach(name=>{dom[name]=element.props[name]});
+
+      element.props.children.forEach(child=>render(child,dom));
+
+      container.appendChild(dom);
+   }
+   ```
+
+   이렇게 react가 동작하는 것을 만들어보았다.
+
+   테스트를 위해서 바벨이 위의 함수를 사용하게 하고 싶다면
+
+   ```jsx
+   const customReact = {
+     render,
+     creteaElement,
+   };
+   /** @jsx customReact.createElement */
+   const container = document.getElementById("root");
+   customReact.render(element, container);
+   ```
+
+   이렇게 해준다.
+
+https://velog.io/@godori/build-your-own-react#step-ii-render-%ED%95%A8%EC%88%98
+
+3. 라이프 사이클
 
    react의 라이프 사이클이란 react 컴포넌트의 생명주기를 말한다. react컴포넌트의 생명주기는 컴포넌트의 실행, 업데이트, 제거 시에 발생하는 이벤트들이 존재한다.
 
@@ -43,7 +198,7 @@
 
       컴포넌트가 제거될 때 unmount된다고 하고 이때 componentWillUnmount메소드가 실행된다. 이 메소드 내부에선 컴포넌트가 지워지기 직전이기 때문에 state의 변경 등의 작업을 하면 안되고, 컴포넌트에서 실행했던 타이머나 네트워크 요청 등을 중지시키는 등의 정리 작업이 요구 된다.
 
-2. render함수
-3. createElement함수
-4. hook
-5. fiber를 이용한 랜더링
+4. render함수
+5. createElement함수
+6. hook
+7. fiber를 이용한 랜더링
